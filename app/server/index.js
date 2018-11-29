@@ -52,7 +52,7 @@ function getLoadInfo(callback) {
 
     command = spawn(nixJsonAPIScript, [ "cpu_utilization", '' ])
     command.stdout.on('data', function(chunk) {
-        load = chunk+"_"+ramleft;
+        load = (coreNum*(100-chunk))+"_"+ramleft;
         //output.push('"cpu":'+chunk.toString()+"}")
     })
 
