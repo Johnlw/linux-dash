@@ -45,7 +45,7 @@ function getLoadInfo(callback) {
     var load = null;
     command.stdout.on('data', function(chunk) {
         var ram = JSON.parse(chunk.toString().replace(/\\/g,''))
-        ramleft = ram.total-ram.used;
+        ramleft = Math.round(ram.total-ram.used);
        // output.push('{ "ram":'+percent)
         //output.push(chunk.toString().replace(/\\/g,''))
     })
