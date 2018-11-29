@@ -32,21 +32,27 @@ wsServer = new ws({
 
 var nixJsonAPIScript = __dirname + '/linux_json_api.sh'
 
+var coreNum = null;
+var getCore = spawn(nixJsonAPIScript, [ "cpu_core", '' ]);
+getCore.stdout.on('data',function(chunk){
+     coreNum = chunk.toString();
+})
+
 function getLoadInfo(callback) {
     var command = spawn(nixJsonAPIScript, [ "current_ram", '' ])
     //var output = [];
-    var percent = null;
+    var ramleft = null;
     var load = null;
     command.stdout.on('data', function(chunk) {
         var ram = JSON.parse(chunk.toString().replace(/\\/g,''))
-        percent = Math.round(ram.used/ram.total*100000)/100000
+        ramleft = ram.total-ram.used;
        // output.push('{ "ram":'+percent)
         //output.push(chunk.toString().replace(/\\/g,''))
     })
 
     command = spawn(nixJsonAPIScript, [ "cpu_utilization", '' ])
     command.stdout.on('data', function(chunk) {
-        load = chunk*0.4+percent*60
+        load = chunk+"_"+ramleft;
         //output.push('"cpu":'+chunk.toString()+"}")
     })
 
@@ -68,6 +74,8 @@ function getPluginData(pluginName, callback) {
         callback(code, output)
     })
 }
+
+
 
 wsServer.on('request', function(request) {
 

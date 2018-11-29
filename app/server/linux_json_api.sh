@@ -58,6 +58,10 @@ common_applications() {
   $ECHO "[" ${result%?} "]" | _parseAndPrint
 }
 
+cpu_core() {
+    $ECHO $($GREP -c 'processor' /proc/cpuinfo)
+}
+
 cpu_info() {
   local lscpuCommand=$(type -P lscpu)
 
